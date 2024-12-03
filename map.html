@@ -1,0 +1,451 @@
+
+<!doctype html>
+<html data-theme="light" lang="en-US">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport"
+    content="width=device-width, user-scalable=no, initial-scale=1.0, maximum-scale=1.0, minimum-scale=1.0">
+  <meta http-equiv="X-UA-Compatible" content="ie=edge">
+  <title>Freshpaint Maps Integration Demo</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Roboto:ital,wght@0,400;0,700;1,400;1,700&display=swap"
+    rel="stylesheet">
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@picocss/pico@2/css/pico.min.css" />
+  <link href="https://freshpaint-hipaa-maps.com/maplibre-gl@3.x/dist/maplibre-gl.css" rel="stylesheet" type="text/css">
+  <style>
+    *,
+    *:before,
+    *:after {
+      box-sizing: border-box;
+      color: #263238;
+      font-family: "Roboto", "Helvetica", "Arial", sans-serif;
+    }
+
+    html,
+    body {
+      background: #f4f6f8;
+      height: 100%;
+    }
+
+    body {
+      font-size: 16px;
+    }
+
+    #autocomplete {
+      left: 0;
+      position: absolute;
+      top: 0;
+      width: calc(100% - 0.5rem);
+    }
+
+    #autocomplete .aa-Form {
+      border-radius: 0;
+    }
+
+    #autocomplete .aa-InputWrapperPrefix {
+      display: none;
+    }
+
+    .header {
+      background: #232F3E;
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 2em;
+      padding: 1rem;
+    }
+
+    .header h1 {
+      color: #fff;
+      font-size: 1.5rem;
+      margin: 0;
+    }
+
+    .fpLogo {
+      display: inline-block;
+    }
+
+    .example {
+      background: #e4e6e8;
+      display: flex;
+      flex-direction: row;
+      height: calc(100vh - 10rem);
+      min-height: 30em;
+      padding: 0.5rem;
+    }
+
+    .cards {
+      background: #e4e6e8;
+      flex: 1;
+      overflow-y: scroll;
+      padding: 4.03125rem 0.5rem 0.5rem 0;
+      position: relative;
+    }
+
+    article.card {
+      border: 1px solid #d1d5da;
+      border-radius: 0.25rem;
+    }
+
+    .map {
+      flex: 2;
+    }
+
+    .card-header {
+      margin: 0;
+    }
+
+    .layer-control {
+      position: absolute;
+      background: #fff;
+      padding: 10px;
+      right: 10px;
+      top: 10px;
+      z-index: 10;
+      border-radius: 5px;
+    }
+
+    .card-reorder-hidden {
+      visibility: hidden;
+      opacity: 0;
+    }
+
+    .card-reorder-visible {
+      visibility: visible;
+      opacity: 1;
+      transition: opacity 3.0s, visibility 3.0s;
+    }
+  </style>
+  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-theme-classic" />
+</head>
+
+<body>
+  <header class="header">
+    <a href="https://freshpaint.io" target="_blank">
+      <div class="fpLogo">
+        <svg viewBox="0 0 581 125" height="36" data-element="svg">
+          <g fill-rule="nonzero" fill="none">
+            <g fill="#FFF">
+              <path
+                d="M153.326 82.964v-59.28h42.632v10.777h-31.446v16.203h29.747v10.344h-29.747V82.98h-11.186zM212.462 41.154l.76 4.83c3.217-5.173 7.537-5.933 11.782-5.933 4.32 0 8.476 1.699 10.77 3.98l-4.662 8.988c-2.115-1.774-4.067-2.713-7.463-2.713-5.422 0-10.427 2.892-10.427 10.598v22.045h-10.338V41.14h9.578v.015zM248.48 65.748c.67 5.172 5.17 8.914 12.453 8.914 3.814 0 8.819-1.446 11.187-3.906l6.614 6.53c-4.41 4.575-11.604 6.781-17.965 6.781-14.404 0-22.969-8.899-22.969-22.299 0-12.714 8.64-21.881 22.21-21.881 13.987 0 22.716 8.645 21.107 25.861H248.48zm22.702-8.556c-.67-5.425-4.916-8.138-10.845-8.138-5.586 0-10.173 2.713-11.693 8.138h22.538zM316.346 52.273c-2.965-2.802-6.36-3.726-10.338-3.726-4.916 0-7.627 1.52-7.627 4.159 0 2.712 2.458 4.233 7.79 4.576 7.88.506 17.89 2.295 17.89 13.4 0 7.378-6.017 13.743-17.964 13.743-6.613 0-13.227-1.103-19.32-7.468l5.08-7.378c2.964 3.309 9.742 5.768 14.404 5.858 3.903.09 7.538-1.953 7.538-5.009 0-2.876-2.369-4.069-8.312-4.412-7.88-.596-17.294-3.473-17.294-12.982 0-9.674 9.995-13.058 17.621-13.058 6.525 0 11.44 1.267 16.267 5.515l-5.735 6.782zM340.998 23.595v23.238c3.724-4.83 8.297-6.275 13.05-6.275 11.871 0 17.114 8.064 17.114 20.36v22.046h-10.337v-21.97c0-7.632-3.977-10.852-9.489-10.852-6.107 0-10.338 5.172-10.338 11.447v21.375h-10.337v-59.37h10.337zM379.891 100.434v-59.28h9.668l.685 5.768c3.217-4.665 8.818-6.692 13.555-6.692 12.885 0 21.435 9.584 21.435 21.881 0 12.208-7.716 21.882-21.107 21.882-4.41 0-10.934-1.357-13.898-5.933v22.388h-10.338v-.014zm35.006-38.323c0-6.529-4.41-11.88-11.872-11.88-7.463 0-11.872 5.337-11.872 11.88 0 6.544 4.826 11.88 11.872 11.88 7.045 0 11.872-5.351 11.872-11.88zM465.99 41.154h9.92v41.81h-9.742l-.506-6.111c-2.369 4.919-8.893 7.289-13.556 7.378-12.378.09-21.524-7.542-21.524-22.224 0-14.414 9.578-21.971 21.778-21.882 5.6 0 10.933 2.624 13.302 6.782l.327-5.753zm-25.085 20.868c0 7.974 5.511 12.714 12.378 12.714 16.266 0 16.266-25.354 0-25.354-6.867 0-12.378 4.665-12.378 12.64zM495.9 29.363c0 8.05-12.2 8.05-12.2 0-.014-8.049 12.2-8.049 12.2 0zM484.624 40.99v41.974h10.338V40.99h-10.338zM535.046 82.964V61.083c0-6.365-3.47-11.195-10.084-11.195-6.36 0-10.68 5.337-10.68 11.701v21.375h-10.249v-41.9h9.236l.685 5.68c4.23-4.16 8.476-6.276 13.734-6.276 9.831 0 17.711 7.378 17.711 20.525v21.971h-10.353zM567.072 29.363v11.88h11.53v8.899h-11.619v18.066c0 3.98 2.205 5.932 5.422 5.932 1.609 0 3.47-.507 5.005-1.267l2.875 8.824c-2.964 1.193-5.422 1.7-8.565 1.774-9.072.343-15-4.83-15-15.263V50.142h-7.806v-8.899h7.806V30.466l10.352-1.103z">
+              </path>
+            </g>
+            <path
+              d="M.238 75.164v-26.34c0-1.339 1.09-2.41 2.418-2.41h29.736a2.413 2.413 0 012.418 2.41v26.34c0 1.339-1.09 2.41-2.418 2.41H2.656a2.413 2.413 0 01-2.418-2.41z"
+              fill="#EE5757"></path>
+            <path
+              d="M34.824 94.375v26.994a2.41 2.41 0 01-2.402 2.41l-29.737.269a2.42 2.42 0 01-2.447-2.411V94.36c0-1.34 1.09-2.41 2.418-2.41h29.736c1.343.014 2.432 1.1 2.432 2.425z"
+              fill="#61DABF"></path>
+            <path
+              d="M91.91 2.619c0-1.34-1.088-2.41-2.416-2.41H2.656a2.413 2.413 0 00-2.418 2.41v26.98c0 1.338 1.09 2.41 2.418 2.41h86.822a2.413 2.413 0 002.418-2.41V2.618h.015z"
+              fill="#EE5757"></path>
+            <path
+              d="M91.91 48.824c0-1.339-1.088-2.41-2.416-2.41H52.566a2.413 2.413 0 00-2.418 2.41v26.34c0 1.339 1.09 2.41 2.417 2.41H89.48a2.413 2.413 0 002.417-2.41v-26.34h.015z"
+              fill="#61DABF"></path>
+          </g>
+        </svg>
+      </div>
+    </a>
+    <h1>
+      Maps Integration Demo
+    </h1>
+  </header>
+  <main class="container">
+
+    <div class="example">
+      <div id="cards" class="cards">
+        <div id="autocomplete"></div>
+      </div>
+      <div id="map" class="map"></div>
+    </div>
+  </main>
+
+  <script src="https://freshpaint-hipaa-maps.com/maplibre-gl@3.x/dist/maplibre-gl.js" type="text/javascript"></script>
+  <script src="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-js" type="text/javascript"></script>
+  <script type="text/javascript">
+    const { autocomplete } = window['@algolia/autocomplete-js'];
+    const envId = "f542825a-99c8-4b51-87b3-62f89c8e430c"
+
+    let lookupPlaceID = (placeId) => {
+      return fetch(
+        `https://freshpaint-hipaa-maps.com/places/v0/indexes/freshpaint/places/${placeId}?token=${envId}`,
+        {
+          method: 'GET',
+          headers: {
+            'Accept': 'application/json',
+          }
+        }
+      )
+        .then((response) => response.json())
+        .then(({ Place }) => {
+          console.log("Place: ", Place);
+          return Place;
+        });
+    }
+
+    var autocompleteMarker;
+
+    autocomplete({
+      container: '#autocomplete',
+      placeholder: 'Search for places',
+      getSources({ query }) {
+        return fetch(
+          `https://freshpaint-hipaa-maps.com/places/v0/indexes/freshpaint/search/suggestions?token=${envId}`,
+          {
+            method: 'POST',
+            headers: {
+              'Accept': 'application/json',
+              'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({
+              Text: query,
+              MaxResults: 8,
+              FilterCountries: ["USA"],
+              FilterCategories: ["MunicipalityType"]
+            })
+          }
+        )
+          .then((response) => response.json())
+          .then(({ Results }) => {
+            console.log("Results: ", Results);
+            return [
+              {
+                sourceId: 'Results',
+                getItems() {
+                  return Results;
+                },
+                getItemInputValue({ item }) {
+                  return item.Text;
+                },
+                templates: {
+                  item({ item }) {
+                    return item.Text;
+                  },
+                },
+                // When a location is selected, we want to center the map on that location
+                // and show the distance from the selected location to each of the markers.
+                // We also want to reorder the cards based on the distance from the selected location.
+                onSelect: function (event) {
+                  lookupPlaceID(event.item.PlaceId)
+                    .then((place) => {
+
+                      map.flyTo({ center: place.Geometry.Point, zoom: 10, speed: 0.7 });
+
+                      if (autocompleteMarker) {
+                        autocompleteMarker.setLngLat(place.Geometry.Point);
+                      } else {
+                        autocompleteMarker = new maplibregl.Marker({ color: "#ed2f21" })
+                          .setLngLat(place.Geometry.Point)
+                          .addTo(map);
+                      }
+
+                      markers.forEach((m) => {
+                        const distance = getDistanceFromLatLonInMiles(m.LngLat[1], m.LngLat[0], place.Geometry.Point[1], place.Geometry.Point[0]);
+                        const distanceEl = document.getElementById(`${m.Header}-distance`);
+                        distanceEl.style.visibility = "visible";
+                        distanceEl.innerHTML = `Distance: ${distance.toFixed(2)} miles`;
+
+
+                        const card = document.getElementById(`${m.Header}`);
+                        card.setAttribute("data-distance", distance);
+                      })
+
+                      const cards = document.querySelector(".cards");
+
+                      [...cards.children].forEach((card) => {
+                        card.classList.add("card-reorder-hidden");
+                        card.classList.remove("card-reorder-visible");
+                      });
+
+                      [...cards.children]
+                        .sort((a, b) => parseFloat(a.getAttribute("data-distance")) > parseFloat(b.getAttribute("data-distance")) ? 1 : -1)
+                        .forEach(node => cards.appendChild(node));
+
+
+                      [...cards.children].forEach((card, idx) => {
+                        setTimeout(() => {
+                          card.classList.remove("card-reorder-hidden");
+                          card.classList.add("card-reorder-visible");
+                        }, 100 + (idx * 500));
+                      });
+                    });
+                },
+              },
+            ];
+          });
+      }
+    });
+
+
+    function getDistanceFromLatLonInMiles(lat1, lon1, lat2, lon2) {
+      var R = 3958.8; // Radius of the earth in miles
+      var dLat = deg2rad(lat2 - lat1);  // deg2rad below
+      var dLon = deg2rad(lon2 - lon1);
+      var a =
+        Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+        Math.cos(deg2rad(lat1)) * Math.cos(deg2rad(lat2)) *
+        Math.sin(dLon / 2) * Math.sin(dLon / 2)
+        ;
+      var c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+      var d = R * c; // Distance in miles
+      return d;
+    }
+
+    function deg2rad(deg) {
+      return deg * (Math.PI / 180)
+    }
+
+
+  </script>
+  <script type="text/javascript">
+    // Styles affect how the maps look:
+    // We currently support the following styles:
+    //   "standard-light":      colorized, typical map style
+    //   "standard-dark":       colorized, typical dark map style
+    //   "visualization-light": grayscale, elegant black and white style
+    //   "visualization-dark":  grayscale, elegant dark black and white style
+    const style = "standard-light"
+
+    // Create a new instance of the map.
+    const map = new maplibregl.Map({
+      container: "map",
+      style: `https://freshpaint-hipaa-maps.com/${envId}/${style}/style-descriptor`,
+
+      // Latitude and longitude of the map's origin
+      center: [-87.6800, 41.8500],
+
+      // Zoom levels (rough descriptions):
+      // 15 : a close street view
+      // 13 : city neighborhoods
+      // 11 : entire region (Chicagoland)
+      zoom: 13,
+    });
+
+    // This adds a toolbar for zooming and panning:
+    // + : zoom in
+    // - : zoom out
+    // compass for rotating (e.g. north facing up or south facing up)
+    map.addControl(new maplibregl.NavigationControl(), "top-left");
+
+    const markers = [
+      {
+        "LngLat": [-87.7276, 41.7919],
+        "Header": "UI Health",
+        "Href": "https://hospital.uillinois.edu/"
+      },
+      {
+        "LngLat": [-87.69738, 41.85505],
+        "Header": "Saint Anthony Hospital",
+        "Href": "https://sahchicago.org/"
+      },
+      {
+        "LngLat": [-87.62154, 41.89546],
+        "Header": "Northwestern Memorial Hospital",
+        "Href": "https://www.nm.org"
+      },
+      {
+        "LngLat": [-87.60476305057742, 41.793923631936686],
+        "Header": "University of Chicago Hospital",
+        "Href": "https://www.uchicagomedicine.org/"
+      },
+      {
+        "LngLat": [-87.66878235881887, 41.874734346545665],
+        "Header": "Rush University Medical Center",
+        "Href": "https://www.rush.edu/"
+      },
+      {
+        "LngLat": [-87.61825209259051, 41.894611750218914],
+        "Header": "Shirley Ryan Ability Lab",
+        "Href": "https://www.sralab.org/"
+      },
+      {
+        "LngLat": [-87.69420, 41.86181],
+        "Header": "Mount Sinai Hospital",
+        "Href": "https://www.sinaichicago.org/en/"
+      },
+      {
+        "LngLat": [-87.68440147984721, 42.06695017772907],
+        "Header": "Evanston Women's Hospital",
+        "Href": "https://www.northshore.org/maternal-health/"
+      }
+    ]
+
+    // You can customize popups with arbitrary HTML
+    // Here, we just do a simple header and link to the website
+    const newPopup = (m) => new maplibregl.Popup({ offset: 25 }).setHTML(`
+    <div>
+      <h4>${m.Header}</h4>
+      <a href="${m.Href}" title="${m.Href}" rel="nofollow noopener noreferrer" target="_blank">${m.Href}</a>
+    </div>
+  `);
+
+    const newLocationCard = (m) => {
+      const d = document.createElement("article");
+      d.id = m.Header;
+      d.className = 'card';
+      d.innerHTML = `
+      <header>
+        <h3 class="card-header">${m.Header}</h3>
+      </header>
+
+      <p>Lat, Long = ${m.LngLat}</p>
+      <p id="${m.Header}-distance" style="visibility:hidden"></p>
+
+      <footer>
+        <a href="${m.Href}" title="${m.Href}" rel="nofollow noopener noreferrer" target="_blank">${m.Href}</a>
+      </footer>
+    `;
+
+      return d;
+    }
+
+    const removeAllPopups = () => {
+      for (const p of document.getElementsByClassName("maplibregl-popup")) {
+        p.remove();
+      }
+    }
+
+    // Iterate over the markers and create location pins with on-click popups
+    markers.forEach((m) => {
+      console.log("marker: ", m);
+      const cards = document.querySelector(".cards");
+      const card = newLocationCard(m);
+      cards.appendChild(card);
+
+      const popup = newPopup(m);
+      const marker = new maplibregl.Marker({ color: "#808080" })
+        .setLngLat(m.LngLat)
+        .setPopup(popup)
+        .addTo(map);
+
+      // Attach on-click handler to the map markers.
+      // When a user clicks on a marker, this will scroll the cards panel until
+      // the corresponding card is in view
+      marker.getElement()
+        .addEventListener('click', (e) => {
+          card.scrollIntoView({ behavior: 'smooth' });
+          card.style.background = "#88e9a6";
+          card.style.transition = "background 0.6s";
+          setTimeout(function () {
+            card.style.background = "";
+          }, 1000);
+        });
+
+      // Attach on-click handler to the location cards - this
+      // will center the map on the location the user has clicked.
+      card.addEventListener('click', (e) => {
+        if ((e.target.nodeName || '').toLowerCase() === 'a') {
+          return;
+        }
+
+        removeAllPopups();
+        map.flyTo({ center: m.LngLat });
+        popup.addTo(map);
+      });
+    });
+
+  </script>
+</body>
+
+</html>
