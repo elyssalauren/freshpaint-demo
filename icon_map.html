@@ -398,11 +398,11 @@
       el.className = 'marker';
       el.style.backgroundImage =
             'url(https://picsum.photos/${m.iconSize.join('/')}/)';
-            console.log("background: ",el.style.backgroundImage);
+            console.log("background: ",'url(https://picsum.photos/${m.iconSize.join('/')}/)');
             el.style.width = '${m.iconSize[0]}px';
-            console.log("width: ",el.style.width);
+            console.log("width: ",'${m.iconSize[0]}px');
             el.style.height = '${m.iconSize[1]}px';
-            console.log("height: ",el.style.height.toStr);
+            console.log("height: ",'${m.iconSize[0]}px');
 
       const popup = newPopup(m);
       const marker = new maplibregl.Marker({element: el})
