@@ -116,6 +116,13 @@
       opacity: 1;
       transition: opacity 3.0s, visibility 3.0s;
     }
+    .marker {
+        display: block;
+        border: none;
+        border-radius: 50%;
+        cursor: pointer;
+        padding: 0;
+    }
   </style>
   <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@algolia/autocomplete-theme-classic" />
 </head>
@@ -319,7 +326,7 @@
       // 15 : a close street view
       // 13 : city neighborhoods
       // 11 : entire region (Chicagoland)
-      zoom: 13,
+      zoom: 5,
     });
 
     // This adds a toolbar for zooming and panning:
@@ -333,13 +340,15 @@
         "LngLat": [-87.7276, 41.7919],
         "Header": "UI Health",
         "Href": "https://hospital.uillinois.edu/",
-        "Icon": "icon.jpg"
+        "Icon": "icon.jpg",
+        'iconSize': [40, 40]
       },
       {
         "LngLat": [-87.69738, 41.85505],
         "Header": "Saint Anthony Hospital",
         "Href": "https://sahchicago.org/",
-        "Icon": "icon.jpg"
+        "Icon": "icon.jpg",
+        'iconSize': [40, 40]
       }
     ]
 
@@ -385,17 +394,16 @@
       const card = newLocationCard(m);
       cards.appendChild(card);
 
-      const el = document.createElement('div');
+       const el = document.createElement('div');
         el.className = 'marker';
         el.style.backgroundImage =
-            m.Icon;
-        el.style.width = '50px';
-        el.style.height = '50px';
+            'url(https://picsum.photos/${marker.properties.iconSize.join('/')}/)';
+        el.style.width = '${marker.properties.iconSize[0]}px';
+        el.style.height = '${marker.properties.iconSize[1]}px';
 
       const popup = newPopup(m);
       const marker = new maplibregl.Marker({ element: el })
         .setLngLat(m.LngLat)
-        .setPopup(popup)
         .addTo(map);
 
       // Attach on-click handler to the map markers.
