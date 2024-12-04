@@ -394,15 +394,18 @@
       const card = newLocationCard(m);
       cards.appendChild(card);
 
-       const el = document.createElement('div');
-        el.className = 'marker';
-        el.style.backgroundImage =
+      const el = document.createElement('div');
+      el.className = 'marker';
+      el.style.backgroundImage =
             'url(https://picsum.photos/${marker.properties.iconSize.join('/')}/)';
-        el.style.width = '${marker.properties.iconSize[0]}px';
-        el.style.height = '${marker.properties.iconSize[1]}px';
+            console.log el.style.backgroundImage;
+            el.style.width = '${marker.properties.iconSize[0]}px';
+            console.log el.style.width;
+            el.style.height = '${marker.properties.iconSize[1]}px';
+            console.log el.style.height;
 
       const popup = newPopup(m);
-      const marker = new maplibregl.Marker({ element: el })
+      const marker = new maplibregl.Marker({element: el})
         .setLngLat(m.LngLat)
         .addTo(map);
 
