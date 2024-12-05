@@ -326,7 +326,7 @@
       // 15 : a close street view
       // 13 : city neighborhoods
       // 11 : entire region (Chicagoland)
-      zoom: 13,
+      zoom: 11,
     });
 
     // This adds a toolbar for zooming and panning:
@@ -407,6 +407,7 @@
       const popup = newPopup(m);
       const marker = new maplibregl.Marker({element: el})
         .setLngLat(m.LngLat)
+        .setPopup(popup)
         .addTo(map);
 
       // Attach on-click handler to the map markers.
