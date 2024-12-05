@@ -356,6 +356,8 @@
     // Here, we just do a simple header and link to the website
     const newPopup = (m) => new maplibregl.Popup({ offset: 25 }).setHTML(`
     <div>
+    <img>
+    <img src=url(https://picsum.photos/400/400/)>
       <h4>${m.Header}</h4>
       <a href="${m.Href}" title="${m.Href}" rel="nofollow noopener noreferrer" target="_blank">${m.Href}</a>
     </div>
