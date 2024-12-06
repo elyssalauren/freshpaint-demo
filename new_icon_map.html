@@ -464,6 +464,8 @@
       const card = newLocationCard(m);
       cards.appendChild(card);
 
+      const d = document.createElement('div');
+
       const p = document.createElement("path");
       p.setAttribute("d", "m16 6.375 9.723 9.723L16 25.82l-9.723-9.722z");
       p.style.fill = "#003769";
@@ -472,9 +474,10 @@
       s.style.height="210px";
       s.style.width="400px";
       s.appendChild(p);
+      d.appendChild(s);
 
       const popup = newPopup(m);
-      const marker = new maplibregl.Marker({element: s})
+      const marker = new maplibregl.Marker({element: d})
         .setLngLat(m.LngLat)
         .setPopup(popup)
         .addTo(map);
