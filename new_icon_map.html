@@ -470,7 +470,8 @@
       p.setAttribute("d", "m16 6.375 9.723 9.723L16 25.82l-9.723-9.722z");
       p.style.fill = "#003769";
 
-      const s = document.createElement("svg");
+      const ns = "http://www.w3.org/2000/svg";
+      const s = document.createElementNS(ns,"svg");
       s.style.height="210px";
       s.style.width="400px";
       s.appendChild(p);
