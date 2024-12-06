@@ -116,10 +116,9 @@
       opacity: 1;
       transition: opacity 3.0s, visibility 3.0s;
     }
-    .marker1 {
-      d: path(
-    "M10,30 A20,20 0,0,1 50,30 A20,20 0,0,1 90,30 Q90,60 50,90 Q10,60 10,30 z M5,5 L90,90"
-  );
+    .markertest {
+      d:
+    "M10,30 A20,20 0,0,1 50,30 A20,20 0,0,1 90,30 Q90,60 50,90 Q10,60 10,30 z M5,5 L90,90";
       fill: "#003769";
     }
   </style>
@@ -466,7 +465,7 @@
       cards.appendChild(card);
 
       const p = document.createElement("path");
-      p.className='marker1';
+      p.className='markertest';
 
       const s = document.createElement("svg");
       s.style.height="210px";
